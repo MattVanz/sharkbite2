@@ -1,7 +1,9 @@
 --Create By HikmattXD. 
 --Fuck you recode.
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
 local Window = Rayfield:CreateWindow({
-    Name = "SharkBite 2",
+    Name = "SharkBite 2 • HikmatXD.",
     LoadingTitle = "SharkBite 2 MattTzy.",
     LoadingSubtitle = "by HikmatXD.",
     Theme = "Default",
@@ -9,7 +11,7 @@ local Window = Rayfield:CreateWindow({
     ConfigurationSaving = {
         Enabled = true,
         FolderName = nil,
-        FileName = "sharkconfig"
+        FileName = "SharkConfig"
     },
     Discord = {
         Enabled = false,
@@ -19,14 +21,22 @@ local Window = Rayfield:CreateWindow({
     KeySystem = false
 })
 
+local clickCount = 0
 local Tab = Window:CreateTab("Main", 4483362458)
-
+localplayer = game:GetService("Players").LocalPlayer.Name
 local remote = nil
 local player = game.Players.LocalPlayer
 local backpack = player:WaitForChild("Backpack")
 local character = player.Character or player.CharacterAdded:Wait()
 local sharkName = nil
 local remotesFolder = game:GetService("ReplicatedStorage"):WaitForChild("Projectiles"):WaitForChild("Events"):WaitForChild("Weapons"):WaitForChild("remotes")
+
+local function antiAFK()
+    while true do
+        virtualInputManager:SendMouseMoveEvent(1, 1, 0, 0, game)
+        task.wait(30)
+    end
+end
 
 local function hookRemote(remoteObject)
     local mt = getrawmetatable(game)
@@ -106,10 +116,11 @@ local runningConnection
 local Toggle
 
 Toggle = Tab:CreateToggle({
-    Name = "autofarm [tembak shark biar aktif]",
+    Name = "auto kill sharks [tembak sharks untuk aktifkan fitur]",
     CurrentValue = false,
-    Flag = "autokillshark",
+    Flag = "AutoKillSharks",
     Callback = function(on)
+    antiAFK() 
         if on then
             local lastNotify = 0
             runningConnection = RunService.Heartbeat:Connect(function(dt)
@@ -117,8 +128,8 @@ Toggle = Tab:CreateToggle({
                     if not remote then
                         if tick() - lastNotify >= 3 then
                             Rayfield:Notify({
-                                Title = "tunggu untuk menembak shark",
-                                Content = "tembak shark untuk aktifkan autofarm",
+                                Title = "tunggu sharks keluar, baru kamu tembak",
+                                Content = "tembak sharks untuk aktifkan fitur",
                                 Duration = 3
                             })
                             lastNotify = tick()
@@ -184,9 +195,9 @@ local function getNearestAliveSurvivor()
 end
 
 Tab:CreateToggle({
-    Name = "autowin untuk shark",
+    Name = "auto kill player [jika kamu menjadi sharks]",
     CurrentValue = false,
-    Flag = "autowin shark",
+    Flag = "AutoKillPlayer",
     Callback = function(state)
         if state then
             AutoWinConnection = RunService.Heartbeat:Connect(function()
@@ -227,15 +238,15 @@ local function setSharkESP(enabled)
         if shark:IsA("Highlight") then
             if enabled then
                 shark.Enabled = true
-                shark.OutlineTransparency = 0
+                shark.OutlineTransparency = 1
                 table.insert(sharkESPConnection, shark:GetPropertyChangedSignal("Enabled"):Connect(function()
                     if not shark.Enabled then
                         shark.Enabled = true
                     end
                 end))
                 table.insert(sharkESPConnection, shark:GetPropertyChangedSignal("OutlineTransparency"):Connect(function()
-                    if shark.OutlineTransparency ~= 0 then
-                        shark.OutlineTransparency = 0
+                    if shark.OutlineTransparency ~= 1 then
+                        shark.OutlineTransparency = 1
                     end
                 end))
             else
@@ -266,6 +277,33 @@ local function watchForNewSharks(toggleState)
         end))
     end
 end
+
+
+
+local function setPlayerESP()
+    local folder = Instance.new("Folder", game.CoreGui.esp)
+    folder.Name = "survivors"
+    for __,v in pairs(game.Players:GetDescendants()) do
+         if v.Name ~= localplayer and v.Team.Name == "Survivor" then
+            survivors = {}
+            table.insert(survivors, v.Name)
+            for __ = 1, #survivors do
+                local esp = Instance.new("BillboardGui",game.CoreGui.esp.survivors)
+                esp.Adornee = game.Players[v.Name].Character
+                esp.AlwaysOnTop=true
+                esp.ResetOnSpawn=false
+                esp.Size = UDim2.new(1,1,1,1)
+                esp.Name = v.Name
+                local tag = Instance.new("TextLabel", esp)
+                tag.Size = UDim2.new(5,5,5,5)
+                tag.Text = "Survivor"
+                tag.TextColor3 = Color3.new(0, 255, 0)
+                tag.BackgroundTransparency = 1
+            end
+         end
+    end
+end
+
 
 Tab:CreateToggle({
     Name = "highlight sharks [esp]",
