@@ -134,7 +134,7 @@ Credits.BorderSizePixel = 0
 Credits.Position = UDim2.new(0.0241935477, 0, 0.738317728, 0)
 Credits.Size = UDim2.new(0, 94, 0, 18)
 Credits.Font = Enum.Font.SourceSans
-Credits.Text = "Bebo Mods"
+Credits.Text = "HikmatXD."
 Credits.TextColor3 = Color3.fromRGB(255, 255, 255)
 Credits.TextScaled = true
 Credits.TextSize = 14.000
@@ -214,5 +214,6 @@ gui.InputChanged:Connect(
         end
     end
 )
+
 
 runService.Heartbeat:Connect(Update)
